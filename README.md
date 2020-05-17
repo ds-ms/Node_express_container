@@ -1,6 +1,6 @@
 ---
 page_type: sample
-description: "Deploy Node express container application using GitHub Actions"
+description: "CI/CD for Node express container application using GitHub Actions"
 products:
 - GitHub Actions
 - Azure App service
