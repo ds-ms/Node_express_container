@@ -1,0 +1,9 @@
+name: Deploy
+on:
+    repository_dispatch:
+        types : "start prod deployment"  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Deploying ${{ github.event.client_payload.workflowref }} from ${{ github.event.client_payload.repository }}
