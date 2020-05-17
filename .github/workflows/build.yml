@@ -1,0 +1,40 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: echo install dependencies
+    - name: Build
+      run: echo Execute build
+    - name: Run tests
+      run: echo test execution
+    - name: Login via Az module
+      uses: azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true         
+    - name: Connect to Logic App
+      id: GetUrl
+      uses: azure/powershell@v1
+      with:
+        inlineScript: |
+          $url = (Get-AzLogicAppTriggerCallbackUrl -ResourceGroupName actionsdemo -Name ApprovalDemo -TriggerName manual).Value
+          if ($url)
+          {
+          echo "::add-mask::$url"
+          echo "::set-output name=LogicAppUrl::$url"
+          }          
+        azPSVersion: '3.1.0'          
+    - name: Request for approval
+      uses: bcstestit/invoke-Azure-Logic-App@v3
+      with:          
+        url: ${{ steps.GetUrl.outputs.LogicAppUrl }}
+        approvers: ${{ secrets.APPROVERS }}
+        instructions: "Verify the test results and functionality on a dummy environment"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      
