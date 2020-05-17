@@ -15,7 +15,7 @@ jobs:
         
     - name: Docker build
       run: |
-       docker build -f ${{ github.workspace }}/Dockerfile -t ${{ env.CONTAINER_REGISTRY }}/nodejsapp:${{ github.sha }}
+       docker build . -t ${{ env.CONTAINER_REGISTRY }}/nodejsapp:${{ github.sha }}
 
     - name: Container scan
       uses: Azure/container-scan@v0
